@@ -4,23 +4,71 @@
 # .zshrc file
 # ============================
 
+# EXPORTS =====================================================================
+
+export EDITOR='vim'
+
 # AUTOLOAD ====================================================================
 
 autoload -U colors && colors
 
-# ALIAS =======================================================================
-
 # SETOPT ======================================================================
 
-# MISC ========================================================================
+# ALIAS =======================================================================
+
+# commands
+
+alias history='fc -il 1'
+
+alias cp='cp -pv'
+alias mv='mv -v'
+alias rm='rm -v'
+alias scp='scp -p'
+alias mkdir='mkdir -v'
+alias :q='exit'
+
+alias ls='ls -F --color=auto'
+alias ll='ls -lh'
+alias la='ls -lah'
+alias ltr='ls -ltrh'
+
+alias grep='grep --color=auto'
+
+alias ..='cd ..'
+alias cd..='cd ..'
+alias cd/='cd /'
+
+# suffix alias
+
+alias -s pdf='evince'
+alias -s PDF='evince'
+
+alias -s png='eog'
+alias -s PNG='eog'
+alias -s jpg='eog'
+alias -s JPG='eog'
+
+alias -s txt=$EDITOR
+alias -s js=$EDITOR
+alias -s htm=$EDITOR
+alias -s css=$EDITOR
+alias -s php=$EDITOR
+alias -s html=$EDITOR
+
 
 # COMPLETION ==================================================================
 
 # BINDS =======================================================================
 
-PROMPT="-%{$fg[cyan]%}%D{%H:%M:%S}%{$reset_color%}- %{$fg[yellow]%}%d
-%{$fg[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg[yellow]%}%{$reset_color%}%% "
+# MISC ========================================================================
 
+## Command history configuration
+HISTFILE=$HOME/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+
+# OLD BELOW THIS LINE =========================================================
+ 
 eval `dircolors -b`
 
 umask 0027
@@ -57,42 +105,6 @@ setopt nobeep
 setopt noglobdots
 
 # ----------------------------
-# ALIAS
-# ----------------------------
-
-# suffix alias
-
-alias -s pdf='evince'
-alias -s PDF='evince'
-
-alias -s png='eog'
-alias -s PNG='eog'
-alias -s jpg='eog'
-alias -s JPG='eog'
-
-alias -s txt=$EDITOR
-alias -s js=$EDITOR
-alias -s htm=$EDITOR
-alias -s css=$EDITOR
-alias -s php=$EDITOR
-alias -s html=$EDITOR
-
-# command alias
-
-alias cp='cp -pv'
-alias mv='mv -v'
-alias rm='rm -v'
-alias scp='scp -p'
-alias mkdir='mkdir -v'
-alias :q='exit'
-
-alias ls='ls -F --color=auto'
-alias ll='ls -lh'
-alias la='ls -lah'
-alias ltr='ls -ltrh'
-alias grep='grep --color=auto'
-
-# ----------------------------
 # BINDS
 # ----------------------------
 #
@@ -109,28 +121,6 @@ case $TERM in
     precmd () {print -Pn "\e]0;%n@%M: %~\a"}
   ;;
 esac
-
-#alias g='grep -in'
-
-# history with date yyyy-mm-dd
-alias history='fc -il 1'
-
-# List direcory contents
-alias cp='cp -pv'
-alias mv='mv -v'
-alias rm='rm -v'
-alias scp='scp -p'
-alias mkdir='mkdir -v'
-alias :q='exit'
-
-alias l='ls -lah'
-alias ll='ls -lh'
-alias la='ls -lah'
-alias ltr='ls -ltrh'
-
-## OLD BELOW THIS LINE
-
-alias afind='ack-grep -il'
 
 # fixme - the load process here seems a bit bizarre
 
@@ -198,28 +188,10 @@ if [ "x$COMPLETION_WAITING_DOTS" = "xtrue" ]; then
   bindkey "^I" expand-or-complete-with-dots
 fi
 
-if [[ "$ENABLE_CORRECTION" == "true" ]]; then
-  alias ebuild='nocorrect ebuild'
-  alias gist='nocorrect gist'
-  alias heroku='nocorrect heroku'
-  alias hpodder='nocorrect hpodder'
-  alias man='nocorrect man'
-  alias mkdir='nocorrect mkdir'
-  alias mv='nocorrect mv'
-  alias mysql='nocorrect mysql'
-  alias sudo='nocorrect sudo'
-
-  setopt correct_all
-fi
-
 # Changing/making/removing directory
 setopt auto_pushd
 setopt pushd_ignore_dups
 setopt pushdminus
-
-alias ..='cd ..'
-alias cd..='cd ..'
-alias cd/='cd /'
 
 function zsh_stats() {
   fc -l 1 | awk '{CMD[$2]++;count++;}END { for (a in CMD)print CMD[a] " " CMD[a]/count*100 "% " a;}' | grep -v "./" | column -c3 -s " " -t | sort -nr | nl |  head -n20
@@ -344,13 +316,6 @@ unfunction grep-flag-available
 
 export GREP_OPTIONS="$GREP_OPTIONS"
 export GREP_COLOR='1;32'
-
-## Command history configuration
-if [ -z $HISTFILE ]; then
-    HISTFILE=$HOME/.zsh_history
-fi
-HISTSIZE=10000
-SAVEHIST=10000
 
 setopt extended_history
 setopt hist_expire_dups_first
@@ -1095,9 +1060,6 @@ local return_status="%{$fg_bold[red]%}%(?..✖)%{$reset_color%}"
 
 # PS1='-\[\033[0;36m\]\t\[\033[0m\]-\[\033[2;37m\] `pwd`\n\[\033[2;33m\]\u\[\033[0m\]@\[\033[2;32m\]\h\[\033[0m\]:\[\033[2;31m\]\W\[\033[0m\]`parse_git_branch`> '
 
-PROMPT='-%{$fg[cyan]%}%*%{$reset_color%}- %{$fg[yellow]%}%d
-%{$fg[green]%}%n%{$reset_color%}@%{$fg[blue]%}%m%{$reset_color%}%{$reset_color%} %% '
-
 function git_prompt_info() {
   if [[ "$(command git config --get oh-my-zsh.hide-status 2>/dev/null)" != "1" ]]; then
     ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
@@ -1108,86 +1070,12 @@ function git_prompt_info() {
 
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$reset_color%}%{$fg_bold[yellow]%}"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$reset_color%}%{$fg[green]%}"
+ 
+# OLD ABOVE THIS LINE =========================================================
+
+# PROMPT ======================================================================
+
+PROMPT='-%{$fg[cyan]%}%*%{$reset_color%}- %{$fg[yellow]%}%d
+%(!.%{$fg_bold[red]%}.%{$fg[green]%}%n%{$reset_color%}@%{$fg[blue]%})%m%{$reset_color%}%{$reset_color%} %% '
 
 RPROMPT='${return_status} $(git_prompt_info)%{$fg_bold[grey]%}!%!%{$reset_color%}'
-
-# Path to your oh-my-zsh installation.
-# export ZSH=$HOME/.oh-my-zsh
-
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-# ZSH_THEME="elmnt"
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-# plugins=(git, git-flow)
-
-# source $ZSH/oh-my-zsh.sh
-
-# User configuration
-
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
