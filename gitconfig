@@ -1,0 +1,21 @@
+[user]
+	name = Sebastian Braun
+	email = sebastian@elmnt.de
+[merge]
+	tool = vimdiff
+[core]
+	editor = vim
+	ui = true
+[push]
+	default = simple
+[color]
+    ui = auto
+    diff = auto
+    status = auto
+    branch = auto
+[pack]
+	threads = 0
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false

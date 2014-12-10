@@ -1,0 +1,13 @@
+# vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4
+
+# ============================
+# .zshenv file
+# ============================
+
+export SHELL='/bin/zsh'
+
+export EDITOR="vim"
+
+export HISTFILE=~/.shell_history
+export HISTSIZE=50000
+export SAVEHIST=50000
