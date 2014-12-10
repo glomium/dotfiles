@@ -1,6 +1,7 @@
+" syntax highlighting
 syntax on
-" colorscheme evening
 
+" file encoding
 set encoding=utf-8
 
 " no old vim limitations
