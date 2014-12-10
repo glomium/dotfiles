@@ -1076,6 +1076,6 @@ ZSH_THEME_GIT_PROMPT_CLEAN="%{$reset_color%}%{$fg[green]%}"
 # PROMPT ======================================================================
 
 PROMPT='-%{$fg[cyan]%}%*%{$reset_color%}- %{$fg[yellow]%}%d
-%(!.%{$fg_bold[red]%}.%{$fg[green]%}%n%{$reset_color%}@%{$fg[blue]%})%m%{$reset_color%}%{$reset_color%} %% '
+%(!.%{$fg[red]%}.%{$fg[green]%}%n%{$reset_color%}@%{$fg[blue]%})%m%{$reset_color%}%{$reset_color%} %(!.!.%%) '
 
 RPROMPT='${return_status} $(git_prompt_info)%{$fg_bold[grey]%}!%!%{$reset_color%}'
