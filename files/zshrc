@@ -59,6 +59,12 @@ alias -s html=$EDITOR
 # COMPLETION ==================================================================
 
 # BINDS =======================================================================
+ 
+# search history backward for entry beginning with typed text
+bindkey "\e[5~" history-beginning-search-backward # PageUp
+
+# search history forward for entry beginning with typed text
+bindkey "\e[6~" history-beginning-search-forward  # PageDown
 
 # MISC ========================================================================
 
@@ -110,11 +116,6 @@ setopt noglobdots
 #
 # vi command line edit
 #bindkey -v
-
-#k# search history backward for entry beginning with typed text
-bindkey "\e[5~" history-beginning-search-backward # PageUp
-#k# search history forward for entry beginning with typed text
-bindkey "\e[6~" history-beginning-search-forward  # PageDown
 
 case $TERM in
   xterm*|rxvt*)
@@ -261,27 +262,6 @@ function env_default() {
     export "$1=$2"       && return 3
 }
 
-# Checks if working tree is dirty
-parse_git_dirty() {
-  local STATUS=''
-  local FLAGS
-  FLAGS=('--porcelain')
-  if [[ "$(command git config --get oh-my-zsh.hide-dirty)" != "1" ]]; then
-    if [[ $POST_1_7_2_GIT -gt 0 ]]; then
-      FLAGS+='--ignore-submodules=dirty'
-    fi
-    if [[ "$DISABLE_UNTRACKED_FILES_DIRTY" == "true" ]]; then
-      FLAGS+='--untracked-files=no'
-    fi
-    STATUS=$(command git status ${FLAGS} 2> /dev/null | tail -n1)
-  fi
-  if [[ -n $STATUS ]]; then
-    echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
-  else
-    echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
-  fi
-}
-
 # Formats prompt string for current git commit short SHA
 function git_prompt_short_sha() {
   SHA=$(command git rev-parse --short HEAD 2> /dev/null) && echo "$ZSH_THEME_GIT_PROMPT_SHA_BEFORE$SHA$ZSH_THEME_GIT_PROMPT_SHA_AFTER"
@@ -406,24 +386,6 @@ export PAGER="less"
 export LESS="-R"
 
 export LC_CTYPE=$LANG
-
-# *_prompt_info functions for usage in your prompt
-#
-# Plugin creators, please add your *_prompt_info function to the list
-# of dummy implementations to help theme creators not receiving errors
-# without the need of implementing conditional clauses.
-#
-# See also lib/bzr.zsh, lib/git.zsh and lib/nvm.zsh for
-# git_prompt_info, bzr_prompt_info and nvm_prompt_info
-
-# Dummy implementations that return false to prevent command_not_found
-# errors with themes, that implement these functions
-# Real implementations will be used when the respective plugins are loaded
-function chruby_prompt_info hg_prompt_info pyenv_prompt_info \
-  rbenv_prompt_info svn_prompt_info vi_mode_prompt_info \
-  virtualenv_prompt_info {
-  return 1
-}
 
 #usage: title short_tab_title looooooooooooooooooooooggggggg_windows_title
 #http://www.faqs.org/docs/Linux-mini/Xterm-Title.html#ss3.1
@@ -655,28 +617,6 @@ alias gunignore='git update-index --no-assume-unchanged'
 # list temporarily ignored files
 alias gignored='git ls-files -v | grep "^[[:lower:]]"'
 
-
-#!zsh
-#
-# Installation
-# ------------
-#
-# To achieve git-flow completion nirvana:
-#
-#  0. Update your zsh's git-completion module to the newest verion.
-#     From here. http://zsh.git.sourceforge.net/git/gitweb.cgi?p=zsh/zsh;a=blob_plain;f=Completion/Unix/Command/_git;hb=HEAD
-#
-#  1. Install this file. Either:
-#
-#     a. Place it in your .zshrc:
-#
-#     b. Or, copy it somewhere (e.g. ~/.git-flow-completion.zsh) and put the following line in
-#        your .zshrc:
-#
-#            source ~/.git-flow-completion.zsh
-#
-#     c. Or, use this file as a oh-my-zsh plugin.
-#
 
 #Alias
 alias gf='git flow'
@@ -1012,13 +952,6 @@ __git_command_successful () {
 
 zstyle ':completion:*:*:git:*' user-commands flow:'description for foo'
 
-function virtualenv_prompt_info(){
-  [[ -n ${VIRTUAL_ENV} ]] || return
-  echo "${ZSH_THEME_VIRTUALENV_PREFIX:=[}${VIRTUAL_ENV:t}${ZSH_THEME_VIRTUALENV_SUFFIX:=]}"
-}
-
-# disables prompt mangling in virtual_env/bin/activate
-export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 
 # git theming default: Variables for theming the git info prompt
@@ -1056,11 +989,14 @@ preexec_functions+=(omz_termsupport_preexec)
 
 
 MODE_INDICATOR="%{$fg_bold[red]%}❮%{$reset_color%}%{$fg[red]%}❮❮%{$reset_color%}"
-local return_status="%{$fg_bold[red]%}%(?..✖)%{$reset_color%}"
 
 # PS1='-\[\033[0;36m\]\t\[\033[0m\]-\[\033[2;37m\] `pwd`\n\[\033[2;33m\]\u\[\033[0m\]@\[\033[2;32m\]\h\[\033[0m\]:\[\033[2;31m\]\W\[\033[0m\]`parse_git_branch`> '
 
-function git_prompt_info() {
+# OLD ABOVE THIS LINE =========================================================
+
+# PROMPT ======================================================================
+ 
+function git_prompt() {
   if [[ "$(command git config --get oh-my-zsh.hide-status 2>/dev/null)" != "1" ]]; then
     ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
     ref=$(command git rev-parse --short HEAD 2> /dev/null) || return 0
@@ -1068,14 +1004,44 @@ function git_prompt_info() {
   fi
 }
 
+# Checks if working tree is dirty
+parse_git_dirty() {
+  local STATUS=''
+  local FLAGS
+  FLAGS=('--porcelain')
+  if [[ "$(command git config --get oh-my-zsh.hide-dirty)" != "1" ]]; then
+    if [[ $POST_1_7_2_GIT -gt 0 ]]; then
+      FLAGS+='--ignore-submodules=dirty'
+    fi
+    if [[ "$DISABLE_UNTRACKED_FILES_DIRTY" == "true" ]]; then
+      FLAGS+='--untracked-files=no'
+    fi
+    STATUS=$(command git status ${FLAGS} 2> /dev/null | tail -n1)
+  fi
+  if [[ -n $STATUS ]]; then
+    echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
+  else
+    echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
+  fi
+}
+
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$reset_color%}%{$fg_bold[yellow]%}"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$reset_color%}%{$fg[green]%}"
- 
-# OLD ABOVE THIS LINE =========================================================
 
-# PROMPT ======================================================================
+# disables prompt mangling in virtual_env/bin/activate
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-PROMPT='-%{$fg[cyan]%}%*%{$reset_color%}- %{$fg[yellow]%}%d
-%(!.%{$fg[red]%}.%{$fg[green]%}%n%{$reset_color%}@%{$fg[blue]%})%m%{$reset_color%}%{$reset_color%} %(!.!.%%) '
+function virtenv_prompt() {
+  if [[ -n ${VIRTUAL_ENV} ]]; then
+    echo "[%{$fg[yellow]%}${VIRTUAL_ENV:t}%{$reset_color%}] "
+  else
+    echo " "
+  fi
+}
 
-RPROMPT='${return_status} $(git_prompt_info)%{$fg_bold[grey]%}!%!%{$reset_color%}'
+local return_status="%{$fg_bold[red]%}%(?..✖)%{$reset_color%}"
+
+PROMPT='-%{$fg[cyan]%}%D{%H:%M:%S}%{$reset_color%}- %{$fg[yellow]%}%d
+%(!.%{$fg[red]%}.%{$fg[green]%}%n%{$reset_color%}@%{$fg[blue]%})%m%{$reset_color%}%{$reset_color%}$(virtenv_prompt)%(!.!.%%) '
+
+RPROMPT='${return_status} $(git_prompt)%{$fg_bold[grey]%}!%!%{$reset_color%}'
