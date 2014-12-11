@@ -990,9 +990,50 @@ preexec_functions+=(omz_termsupport_preexec)
 
 MODE_INDICATOR="%{$fg_bold[red]%}❮%{$reset_color%}%{$fg[red]%}❮❮%{$reset_color%}"
 
-# PS1='-\[\033[0;36m\]\t\[\033[0m\]-\[\033[2;37m\] `pwd`\n\[\033[2;33m\]\u\[\033[0m\]@\[\033[2;32m\]\h\[\033[0m\]:\[\033[2;31m\]\W\[\033[0m\]`parse_git_branch`> '
 
 # OLD ABOVE THIS LINE =========================================================
+ 
+# AUTO ACTIVATE VIRTUAL ENV ===================================================
+
+function autoactivate_virtual_env {
+  local PROJECT_ROOT=`git rev-parse --show-toplevel 2> /dev/null`
+
+  if [[ "$PROJECT_ROOT" != "" ]]; then
+
+    # check if virtual env changed
+    if [[ -n ${VIRTUAL_ENV} ]]; then
+      if [[ "$VIRTUAL_ENV_AUTO_ACTIVATE" == "" ]]; then
+          return 0
+      elif [[ "$VIRTUAL_ENV_AUTO_ACTIVATE" == "$PROJECT_ROOT" ]]; then
+          return 0
+      else
+        deactivate
+        VIRTUAL_ENV_AUTO_ACTIVATE=""
+      fi
+    fi
+
+    # activate virtual env
+    if [[ -d "$PROJECT_ROOT/virtenv" ]]; then
+      . $PROJECT_ROOT/virtenv/bin/activate
+      VIRTUAL_ENV_AUTO_ACTIVATE=$PROJECT_ROOT
+    fi
+
+  elif [[ -n ${VIRTUAL_ENV} && "$VIRTUAL_ENV_AUTO_ACTIVATE" != "" ]]; then
+    deactivate
+    VIRTUAL_ENV_AUTO_ACTIVATE=""
+  fi
+
+  return 0
+}
+
+# add function to chpwd functions array
+if (( ${+chpwd_functions} )); then
+    if (( $chpwd_functions[(I)autoactivate_virtual_env] == 0 )); then
+        set -A chpwd_functions $chpwd_functions autoactivate_virtual_env
+    fi
+else
+    set -A chpwd_functions autoactivate_virtual_env
+fi
 
 # PROMPT ======================================================================
  
@@ -1023,13 +1064,16 @@ parse_git_dirty() {
   fi
 }
 
-
 # disables prompt mangling in virtual_env/bin/activate
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 function virtenv_prompt() {
   if [[ -n ${VIRTUAL_ENV} ]]; then
-    echo "[%{$fg[yellow]%}${VIRTUAL_ENV:t}%{$reset_color%}] "
+    if [[ -n ${VIRTUAL_ENV_AUTO_ACTIVATE} ]]; then
+      echo "[%{$fg[magenta]%}${VIRTUAL_ENV:h:t}%{$reset_color%}] "
+    else
+      echo "[%{$fg[yellow]%}${VIRTUAL_ENV:t}%{$reset_color%}] "
+    fi
   else
     echo " "
   fi
