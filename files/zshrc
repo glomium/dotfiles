@@ -6,7 +6,13 @@
 
 # EXPORTS =====================================================================
 
-export EDITOR='vim'
+export SHELL='/bin/zsh'
+
+export EDITOR="vim"
+
+export HISTFILE=$HOME/.zsh_history
+export HISTSIZE=50000
+export SAVEHIST=50000
 
 # AUTOLOAD ====================================================================
 
@@ -68,16 +74,11 @@ bindkey "\e[6~" history-beginning-search-forward  # PageDown
 
 # MISC ========================================================================
 
-## Command history configuration
-HISTFILE=$HOME/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
+umask 0027
 
 # OLD BELOW THIS LINE =========================================================
  
 eval `dircolors -b`
-
-umask 0027
 
 # append history list to the history file; this is the default but we make sure
 # because it's required for share_history.
@@ -150,12 +151,7 @@ bindkey -M menuselect '^o' accept-and-infer-next-history
 
 zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
-if [ "$OSTYPE[0,7]" = "solaris" ]
-then
-  zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm"
-else
-  zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
-fi
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
 
 # disable named-directories autocompletion
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
@@ -260,16 +256,6 @@ function default() {
 function env_default() {
     env | grep -q "^$1=" && return 0 
     export "$1=$2"       && return 3
-}
-
-# Formats prompt string for current git commit short SHA
-function git_prompt_short_sha() {
-  SHA=$(command git rev-parse --short HEAD 2> /dev/null) && echo "$ZSH_THEME_GIT_PROMPT_SHA_BEFORE$SHA$ZSH_THEME_GIT_PROMPT_SHA_AFTER"
-}
-
-# Formats prompt string for current git commit long SHA
-function git_prompt_long_sha() {
-  SHA=$(command git rev-parse HEAD 2> /dev/null) && echo "$ZSH_THEME_GIT_PROMPT_SHA_BEFORE$SHA$ZSH_THEME_GIT_PROMPT_SHA_AFTER"
 }
 
 #
@@ -952,17 +938,8 @@ __git_command_successful () {
 
 zstyle ':completion:*:*:git:*' user-commands flow:'description for foo'
 
-
-
-# git theming default: Variables for theming the git info prompt
-ZSH_THEME_GIT_PROMPT_PREFIX="git:("         # Prefix at the very beginning of the prompt, before the branch name
-ZSH_THEME_GIT_PROMPT_SUFFIX=")"             # At the very end of the prompt
-ZSH_THEME_GIT_PROMPT_DIRTY="*"              # Text to display if the branch is dirty
-ZSH_THEME_GIT_PROMPT_CLEAN=""               # Text to display if the branch is clean
-
 # Setup the prompt with pretty colors
 setopt prompt_subst
-
 
 ZSH_THEME_TERM_TAB_TITLE_IDLE="%15<..<%~%<<" #15 char left truncated PWD
 ZSH_THEME_TERM_TITLE_IDLE="%n@%m: %~"
