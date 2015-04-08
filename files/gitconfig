@@ -1,6 +1,7 @@
 [user]
 	name = Sebastian Braun
 	email = sebastian@elmnt.de
+	signingkey = 1C712247
 
 [merge]
 	tool = vimdiff

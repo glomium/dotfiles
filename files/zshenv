@@ -11,3 +11,5 @@ export EDITOR="vim"
 export HISTFILE=~/.shell_history
 export HISTSIZE=50000
 export SAVEHIST=50000
+
+export VAGRANT_DEFAULT_PROVIDER=libvirt
