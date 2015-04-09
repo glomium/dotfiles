@@ -80,6 +80,8 @@ umask 0027
  
 eval `dircolors -b`
 
+umask 0022
+
 # append history list to the history file; this is the default but we make sure
 # because it's required for share_history.
 setopt append_history
