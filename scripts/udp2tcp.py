@@ -8,7 +8,7 @@ import time
 RUN = "/tmp/run-udp2tcp.pid"
 IP = "127.0.0.1"
 PORT = 5959
-BUFFER = 2048
+BUFFER = 4096
 
 udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
