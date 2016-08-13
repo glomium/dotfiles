@@ -55,6 +55,9 @@ set title
 " show matching bracket
 set showmatch
 
+" compatabiltiy with webpack
+set backupcopy=yes
+
 " linebreak after 80th row
 set wrapmargin=80
 set textwidth=1000

@@ -54,13 +54,6 @@ alias -s PNG='eog'
 alias -s jpg='eog'
 alias -s JPG='eog'
 
-alias -s txt=$EDITOR
-alias -s js=$EDITOR
-alias -s htm=$EDITOR
-alias -s css=$EDITOR
-alias -s php=$EDITOR
-alias -s html=$EDITOR
-
 
 # COMPLETION ==================================================================
 
