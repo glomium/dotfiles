@@ -29,4 +29,4 @@
     prompt = false
 
 [credential]
-	helper = store
+	helper = cache --timeout=18000
