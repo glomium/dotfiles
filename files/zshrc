@@ -986,8 +986,8 @@ function autoactivate_virtual_env {
     fi
 
     # activate virtual env
-    if [[ -d "$PROJECT_ROOT/virtenv" ]]; then
-      . $PROJECT_ROOT/virtenv/bin/activate
+    if [[ -d "$PROJECT_ROOT/.venv" ]]; then
+      . $PROJECT_ROOT/.virtenv/bin/activate
       VIRTUAL_ENV_AUTO_ACTIVATE=$PROJECT_ROOT
     fi
     if [[ -d "$PROJECT_ROOT/.virtenv" ]]; then
