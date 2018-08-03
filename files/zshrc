@@ -990,10 +990,6 @@ function autoactivate_virtual_env {
       . $PROJECT_ROOT/.venv/bin/activate
       VIRTUAL_ENV_AUTO_ACTIVATE=$PROJECT_ROOT
     fi
-    if [[ -d "$PROJECT_ROOT/.virtenv" ]]; then
-      . $PROJECT_ROOT/.virtenv/bin/activate
-      VIRTUAL_ENV_AUTO_ACTIVATE=$PROJECT_ROOT
-    fi
 
   elif [[ -n ${VIRTUAL_ENV} && "$VIRTUAL_ENV_AUTO_ACTIVATE" != "" ]]; then
     deactivate
