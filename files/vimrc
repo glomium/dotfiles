@@ -63,6 +63,10 @@ set wrapmargin=80
 set textwidth=1000
 set wrap
 
+" spell checking
+set spell
+set spelllang=en_us
+
 " bracket expansion
 "inoremap ( ()<Left>
 "inoremap [ []<Left>
