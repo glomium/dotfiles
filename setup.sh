@@ -1,5 +1,7 @@
 #!/bin/bash
 
-cp files/vimrc ~/.vimrc
+DIR=$(pwd)
+
+ln -s $DIR/files/vimrc ~/.vimrc
 
 echo "TEST" > ~/setup-test

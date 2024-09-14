@@ -1,5 +1,5 @@
 " syntax highlighting
-syntax on
+" syntax on
 
 " file encoding
 set encoding=utf-8
