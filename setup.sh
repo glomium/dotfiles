@@ -3,6 +3,7 @@
 DIR=$(pwd)
 
 ln -fs $DIR/files/vimrc ~/.vimrc
+ln -fs $DIR/files/zshrc ~/.zshrc
 
 if [ -f /run/.containerenv ] || [ -f /.dockerenv ]; then
     echo "Dotfiles are deployed in a container"

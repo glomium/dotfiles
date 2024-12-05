@@ -6,16 +6,15 @@
 
 # EXPORTS =====================================================================
 
-export SHELL='/bin/zsh'
-
+export SHELL=$(which zsh)
 export EDITOR="vim"
-
 export HISTFILE=$HOME/.zsh_history
 export HISTSIZE=50000
 export SAVEHIST=50000
 
 # AUTOLOAD ====================================================================
 
+autoload -Uz compinit && compinit
 autoload -U colors && colors
 
 # SETOPT ======================================================================
@@ -24,36 +23,16 @@ autoload -U colors && colors
 
 # commands
 
-alias history='fc -il 1'
-
 alias cp='cp -pv'
+alias grep='grep --color=auto'
+alias ll='ls -lh'
+alias mkdir='mkdir -v'
 alias mv='mv -v'
 alias rm='rm -v'
 alias scp='scp -p'
-alias mkdir='mkdir -v'
-alias :q='exit'
-
-alias ls='ls -F --color=auto'
-alias ll='ls -lh'
-alias la='ls -lah'
-alias ltr='ls -ltrh'
-
-alias grep='grep --color=auto'
 
 alias ..='cd ..'
 alias cd..='cd ..'
-alias cd/='cd /'
-
-# suffix alias
-
-alias -s pdf='evince'
-alias -s PDF='evince'
-
-alias -s png='eog'
-alias -s PNG='eog'
-alias -s jpg='eog'
-alias -s JPG='eog'
-
 
 # COMPLETION ==================================================================
 
@@ -72,8 +51,6 @@ umask 0027
 # OLD BELOW THIS LINE =========================================================
  
 eval `dircolors -b`
-
-umask 0022
 
 # append history list to the history file; this is the default but we make sure
 # because it's required for share_history.
