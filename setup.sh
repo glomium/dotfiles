@@ -29,6 +29,7 @@ if [ -f /run/.containerenv ] || [ -f /.dockerenv ]; then
          net-tools \
          openssh-clients \
          openssl-libs \
+         podman \
          procps \
          psmisc \
          rsync \
