@@ -20,6 +20,7 @@ if [ -f /run/.containerenv ] || [ -f /.dockerenv ]; then
          gnupg2 \
          grep \
          iproute \
+         iputils \
          jq \
          krb5-libs \
          less \
