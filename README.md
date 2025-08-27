@@ -8,4 +8,4 @@
 * "dotfiles.installCommand": "setup.sh",
 * "dotfiles.repository": "https://github.com/glomium/dotfiles"
 * "dotfiles.targetPath": "~/.dotfiles"
-
+* "telemetry.telemetryLevel": "off"
